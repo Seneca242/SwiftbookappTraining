@@ -9,18 +9,37 @@ import UIKit
 
 class CourseListViewController: UIViewController {
     
-    var tableView: UITableView = {
+    private var tableView: UITableView = {
         let tableView = UITableView()
         tableView.backgroundColor = .red
-        tableView.rowHeight = 30
+        tableView.rowHeight = 43.5
         return tableView
     }()
     
-    var courseCell: CourseCell = {
+    private var courseCell: CourseCell = {
         let cell = CourseCell()
         cell.backgroundColor = .blue
+        cell.contentMode = .scaleToFill
         return cell
     }()
+    
+    private lazy var contentView: UIView = {
+        let contentView = UIView()
+        contentView.backgroundColor = .white
+//        contentView.frame.size = contentSize
+        return contentView
+    }()
+    
+    private lazy var imageForCell: UIImageView = {
+        var image = UIImageView()
+        image.backgroundColor = .black
+        image.contentMode = .scaleAspectFit
+        return image
+    }()
+    
+//    private var contentSize: CGSize {
+//        CGSize(width: view.frame.width, height: view.frame.height + 200)
+//    }
     
     private var activityIndicator: UIActivityIndicatorView?
     private var courses: [Course] = []
@@ -34,10 +53,13 @@ class CourseListViewController: UIViewController {
         tableView.register( CourseCell.self, forCellReuseIdentifier: cellID)
         addSubViews(subViews: tableView)
         tableView.addSubview(courseCell)
+        courseCell.addSubview(contentView)
+        courseCell.addSubview(imageForCell)
         setupConstraints()
+        setupNavigationBar()
         getCourses()
-//        tableView.delegate = self
-//        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.dataSource = self
         
     }
     
@@ -83,19 +105,38 @@ class CourseListViewController: UIViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0)
-//            tableView.heightAnchor.constraint(equalToConstant: 300)
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0),
+            tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 0),
+            tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: 0),
+            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0)
         ])
         
         courseCell.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
+//            courseCell.widthAnchor.constraint(equalToConstant: 375),
+            courseCell.heightAnchor.constraint(equalToConstant: 43.5),
             courseCell.topAnchor.constraint(equalTo: tableView.topAnchor, constant: 50),
+            courseCell.centerXAnchor.constraint(equalTo: tableView.centerXAnchor),
             courseCell.leadingAnchor.constraint(equalTo: tableView.leadingAnchor, constant: 0),
             courseCell.trailingAnchor.constraint(equalTo: tableView.trailingAnchor, constant: 0)
+        ])
+        
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            contentView.topAnchor.constraint(equalTo: courseCell.topAnchor, constant: 50),
+            contentView.leadingAnchor.constraint(equalTo: courseCell.leadingAnchor, constant: 0),
+            contentView.trailingAnchor.constraint(equalTo: courseCell.trailingAnchor, constant: 0)
+        ])
+        
+        imageForCell.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            imageForCell.topAnchor.constraint(equalTo: courseCell.topAnchor, constant: 0),
+            imageForCell.leadingAnchor.constraint(equalTo: courseCell.leadingAnchor, constant: 0),
+            imageForCell.widthAnchor.constraint(equalToConstant: 50),
+            imageForCell.heightAnchor.constraint(equalToConstant: 43.5)
         ])
     }
 
