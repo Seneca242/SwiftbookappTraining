@@ -8,7 +8,8 @@
 import UIKit
 
 class CourseDetailsViewController: UIViewController {
-
+    
+   
     private lazy var courseNameLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "Arial", size: 14)
@@ -37,6 +38,7 @@ class CourseDetailsViewController: UIViewController {
     
     private lazy var favouriteButton: UIButton = {
         let button = UIButton()
+        button.addTarget(self, action: #selector(toggleFavourite), for: .touchUpInside)
         return button
     }()
     
@@ -49,8 +51,8 @@ class CourseDetailsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         addSubviews(to: courseNameLabel, numberOfLessonsLabel, numberOfTestsLabel, courseImage, favouriteButton)
-//        loadFavouriteStatus()
-//        setupUI()
+        loadFavouriteStatus()
+        setupUI()
 
        
     }
@@ -60,6 +62,24 @@ class CourseDetailsViewController: UIViewController {
         views.forEach { subView in
             view.addSubview(subView)
         }
+    }
+    
+    @objc private func toggleFavourite() {
+        isFavourite.toggle()
+        setStatusForFavouriteButton()
+        DataManager.shared.setFavoriteStatus(for: course.name, with: isFavourite)
+    }
+    
+    private func setupUI() {
+        courseNameLabel.text = course.name
+        numberOfLessonsLabel.text = "Number of lessons: \(course.numberOfLessons)"
+        numberOfTestsLabel.text = "Number of tests: \(course.numberOfTests)"
+        
+        if let imageData = ImageManager.shared.fetchImageData(from: course.imageUrl) {
+            courseImage.image = UIImage(data: imageData)
+        }
+        
+        setStatusForFavouriteButton()
     }
   
 }
