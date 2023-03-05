@@ -16,31 +16,6 @@ class CourseListViewController: UIViewController {
         return tableView
     }()
     
-    private var courseCell: CourseCell = {
-        let cell = CourseCell()
-//        cell.backgroundColor = .blue
-        cell.contentMode = .scaleToFill
-        return cell
-    }()
-    
-//    private lazy var contentView: UIView = {
-//        let contentView = UIView()
-//        contentView.backgroundColor = .white
-////        contentView.frame.size = contentSize
-//        return contentView
-//    }()
-//
-//    private lazy var imageForCell: UIImageView = {
-//        var image = UIImageView()
-//        image.backgroundColor = .black
-//        image.contentMode = .scaleAspectFit
-//        return image
-//    }()
-    
-//    private var contentSize: CGSize {
-//        CGSize(width: view.frame.width, height: view.frame.height + 200)
-//    }
-    
     private var activityIndicator: UIActivityIndicatorView?
     private var courses: [Course] = []
 
@@ -53,9 +28,6 @@ class CourseListViewController: UIViewController {
         activityIndicator = showActivityIndicator(in: view)
         tableView.register( CourseCell.self, forCellReuseIdentifier: cellID)
         addSubViews(subViews: tableView)
-        tableView.addSubview(courseCell)
-//        courseCell.addSubview(contentView)
-//        courseCell.addSubview(imageForCell)
         setupConstraints()
         setupNavigationBar()
         getCourses()
@@ -121,34 +93,6 @@ class CourseListViewController: UIViewController {
             tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: 0),
             tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0)
         ])
-        
-        courseCell.translatesAutoresizingMaskIntoConstraints = false
-
-        NSLayoutConstraint.activate([
-//            courseCell.widthAnchor.constraint(equalToConstant: 375),
-            courseCell.heightAnchor.constraint(equalToConstant: 43.5),
-            courseCell.topAnchor.constraint(equalTo: tableView.topAnchor, constant: 50),
-            courseCell.centerXAnchor.constraint(equalTo: tableView.centerXAnchor),
-            courseCell.leadingAnchor.constraint(equalTo: tableView.leadingAnchor, constant: 0),
-            courseCell.trailingAnchor.constraint(equalTo: tableView.trailingAnchor, constant: 0)
-        ])
-        
-//        contentView.translatesAutoresizingMaskIntoConstraints = false
-//
-//        NSLayoutConstraint.activate([
-//            contentView.topAnchor.constraint(equalTo: courseCell.topAnchor, constant: 50),
-//            contentView.leadingAnchor.constraint(equalTo: courseCell.leadingAnchor, constant: 0),
-//            contentView.trailingAnchor.constraint(equalTo: courseCell.trailingAnchor, constant: 0)
-//        ])
-//
-//        imageForCell.translatesAutoresizingMaskIntoConstraints = false
-//
-//        NSLayoutConstraint.activate([
-//            imageForCell.topAnchor.constraint(equalTo: courseCell.topAnchor, constant: 0),
-//            imageForCell.leadingAnchor.constraint(equalTo: courseCell.leadingAnchor, constant: 0),
-//            imageForCell.widthAnchor.constraint(equalToConstant: 50),
-//            imageForCell.heightAnchor.constraint(equalToConstant: 43.5)
-//        ])
     }
 
 }
@@ -161,9 +105,18 @@ extension CourseListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath)
         guard let cell = cell as? CourseCell else { return UITableViewCell() }
-//        cell.textLabel?.numberOfLines = 1
         let course = courses[indexPath.row]
-        cell.configure(with: course)
+//        cell.configure(with: course)
+        DispatchQueue.global().async {
+            if let imageData = ImageManager.shared.fetchImageData(from: course.imageUrl) {
+                DispatchQueue.main.async {
+                    var configuration = cell.defaultContentConfiguration()
+                    configuration.image = UIImage(data: imageData)
+                    configuration.text = course.name
+                    cell.contentConfiguration = configuration
+                }
+            }
+        }
         return cell
     }
 }

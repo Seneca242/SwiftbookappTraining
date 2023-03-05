@@ -81,5 +81,13 @@ class CourseDetailsViewController: UIViewController {
         
         setStatusForFavouriteButton()
     }
+    
+    private func setStatusForFavouriteButton() {
+        favouriteButton.tintColor = isFavourite ? .red : .gray
+    }
+    
+    private func loadFavouriteStatus() {
+        isFavourite = DataManager.shared.getFavoriteStatus(for: course.name)
+    }
   
 }
