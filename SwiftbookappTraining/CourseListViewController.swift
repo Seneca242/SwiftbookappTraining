@@ -106,17 +106,7 @@ extension CourseListViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath)
         guard let cell = cell as? CourseCell else { return UITableViewCell() }
         let course = courses[indexPath.row]
-//        cell.configure(with: course)
-        DispatchQueue.global().async {
-            if let imageData = ImageManager.shared.fetchImageData(from: course.imageUrl) {
-                DispatchQueue.main.async {
-                    var configuration = cell.defaultContentConfiguration()
-                    configuration.image = UIImage(data: imageData)
-                    configuration.text = course.name
-                    cell.contentConfiguration = configuration
-                }
-            }
-        }
+        cell.configure(with: course)
         return cell
     }
 }

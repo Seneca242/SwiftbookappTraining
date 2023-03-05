@@ -89,5 +89,5 @@ class CourseDetailsViewController: UIViewController {
     private func loadFavouriteStatus() {
         isFavourite = DataManager.shared.getFavoriteStatus(for: course.name)
     }
-  
+    
 }
