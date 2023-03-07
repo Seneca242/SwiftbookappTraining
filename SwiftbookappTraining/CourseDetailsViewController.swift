@@ -9,7 +9,6 @@ import UIKit
 
 class CourseDetailsViewController: UIViewController {
     
-   
     private lazy var courseNameLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "Arial", size: 14)
@@ -42,21 +41,17 @@ class CourseDetailsViewController: UIViewController {
         return button
     }()
     
-    
-    
     var course: Course!
     
     private var isFavourite = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .white
         addSubviews(to: courseNameLabel, numberOfLessonsLabel, numberOfTestsLabel, courseImage, favouriteButton)
         loadFavouriteStatus()
         setupUI()
-
-       
     }
-    
 
     private func addSubviews(to views: UIView...) {
         views.forEach { subView in

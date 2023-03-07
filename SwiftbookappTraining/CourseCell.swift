@@ -15,9 +15,10 @@ class CourseCell: UITableViewCell {
         guard let url = course.imageUrl else { return }
         ImageManager.shared.fetchImage(from: url) { data, response in
             content.image = UIImage(data: data)
+            self.contentConfiguration = content
         }
 //        content.image = UIImage(data: imageData)
-        contentConfiguration = content
+//        contentConfiguration = content
         contentConfiguration = content
     }
     

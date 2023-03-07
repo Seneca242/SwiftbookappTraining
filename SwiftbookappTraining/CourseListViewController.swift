@@ -7,14 +7,7 @@
 
 import UIKit
 
-class CourseListViewController: UIViewController {
-    
-    private var tableView: UITableView = {
-        let tableView = UITableView()
-        tableView.backgroundColor = .red
-        tableView.rowHeight = 43.5
-        return tableView
-    }()
+class CourseListViewController: UITableViewController {
     
     private var activityIndicator: UIActivityIndicatorView?
     private var courses: [Course] = []
@@ -25,10 +18,10 @@ class CourseListViewController: UIViewController {
         super.viewDidLoad()
         title = "Courses"
         view.backgroundColor = .white
+        tableView.backgroundColor = .red
+        tableView.rowHeight = 43.5
         activityIndicator = showActivityIndicator(in: view)
         tableView.register( CourseCell.self, forCellReuseIdentifier: cellID)
-        addSubViews(subViews: tableView)
-        setupConstraints()
         setupNavigationBar()
         getCourses()
         tableView.delegate = self
@@ -65,6 +58,8 @@ class CourseListViewController: UIViewController {
         navigationController?.navigationBar.standardAppearance = navBarAppearance
         navigationController?.navigationBar.scrollEdgeAppearance = navBarAppearance
         
+        navigationController?.navigationBar.tintColor = .white
+        
 //        navigationController?.navigationItem.title = "Courses"
 //        title = "Courses"
 //        navigationController?.title = "Courses"
@@ -83,26 +78,14 @@ class CourseListViewController: UIViewController {
         
         return activityIndicator
     }
-    
-    private func setupConstraints() {
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0),
-            tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 0),
-            tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: 0),
-            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0)
-        ])
-    }
-
 }
 
-extension CourseListViewController: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+extension CourseListViewController {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         courses.count
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath)
         guard let cell = cell as? CourseCell else { return UITableViewCell() }
         let course = courses[indexPath.row]
@@ -111,12 +94,14 @@ extension CourseListViewController: UITableViewDataSource {
     }
 }
 
-extension CourseListViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+extension CourseListViewController {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let course = courses[indexPath.row]
         let courseDetailsVC = CourseDetailsViewController()
+        courseDetailsVC.modalPresentationStyle = .fullScreen
         courseDetailsVC.course = course
-        present(courseDetailsVC, animated: true)
+//        present(courseDetailsVC, animated: true)
+        navigationController?.pushViewController(courseDetailsVC, animated: true)
     }
 }
