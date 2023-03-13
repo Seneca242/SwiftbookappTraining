@@ -90,9 +90,6 @@ class CourseDetailsViewController: UIViewController {
         numberOfLessonsLabel.text = "Number of lessons: \(course.numberOfLessons)"
         numberOfTestsLabel.text = "Number of tests: \(course.numberOfTests)"
         
-//        if let imageData = ImageManager.shared.fetchImageData(from: course.imageUrl) {
-//            courseImage.image = UIImage(data: imageData)
-//        }
         guard let url = course.imageUrl else { return }
         ImageManager.shared.fetchImage(from: url) { data, response in
             self.courseImage.image = UIImage(data: data)
